@@ -46,7 +46,7 @@ function createMainFile(name, collection, database) {
 		var template = hbs.compile(data.toString());
 		var context = {database: database, collection: collection, name: name};
 		var result = template(context);
-		fs.writeFile(name, result, function(err) {
+		fs.writeFile(name + '.js', result, function(err) {
 			if (err) throw err;
 			createDatabaseFile(collection, database, port, url);
 		});
@@ -58,7 +58,7 @@ function createDatabaseFile(collection, database, port, url) {
 		var template = hbs.compile(data.toString());
 		var context = {database: database, collection: collection, url:url, port: port};
 		var result = template(context);
-		fs.writeFile(database, result, function(err) {
+		fs.writeFile(database + '.js', result, function(err) {
 			if (err) throw err;
 			console.log('complete');
 		});
