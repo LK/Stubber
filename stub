@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+
+process.bin = process.title = 'stubber';
+
+var path = require('path');
+var fs = require('fs');
+var prompt = require('prompt');
+var colors = require('colors');
+var hbs = require('hbs');
+
+var currentDir = process.cwd();
+
+var name, collection, database, url, port;
+
+console.log('Current Directory:', currentDir);
+console.log('Arguments:', process.argv.length);
+console.log(process.argv);
+var nameString = "[".white + "?".green + "] Main File Name:";
+var collectionString = "[".white + "?".green + "] Collection Name:";
+var databaseString = "[".white + "?".green + "] Database Access File Name:";
+var urlString = "[".white + "?".green + "] Database URL:";
+var portString = "[".white + "?".green + "] Database Port:";
+//starts the prompt
+prompt.start();
+
+prompt.get([nameString, databaseString, collectionString, urlString, portString], function(err, result) {
+	console.log(result[nameString]);
+	name = result[nameString];
+	console.log(result[databaseString]);
+	database = result[databaseString];
+	console.log(result[collectionString]);
+	collection = result[collectionString];
+	console.log(result[urlString]);
+	url = result[urlString];
+	console.log(result[portString]);
+	port = result[portString];
+	createMainFile(name, collection, database);
+});
+
+function createMainFile(name, collection, database) {
+	fs.readFile('mainFile.txt', function(err, data) {
+		var mainFile = data;
+		if (err) throw err;
+		console.log(data);
+		console.log(data.toString());
+		var template = hbs.compile(data.toString());
+		var context = {database: database, collection: collection, name: name};
+		var result = template(context);
+		fs.writeFile(name, result, function(err) {
+			if (err) throw err;
+			createDatabaseFile(collection, database, port, url);
+		});
+	})
+}
+
+function createDatabaseFile(collection, database, port, url) {
+	fs.readFile('databaseFile.txt', function(err, data) {
+		var template = hbs.compile(data.toString());
+		var context = {database: database, collection: collection, url:url, port: port};
+		var result = template(context);
+		fs.writeFile(database, result, function(err) {
+			if (err) throw err;
+			console.log('complete');
+		});
+	});
+}
+
+/*process.stdout.write("[" + "?".green + "] Main File Name: ");
+
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+
+process.stdin.on('data', function(chunk) {
+  process.stdout.write('data: ' + chunk);
+});
+*/

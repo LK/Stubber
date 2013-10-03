@@ -1,0 +1,16 @@
+{
+  "name": "stubber",
+  "version": "0.0.0",
+  "description": "A little program that stubs a RESTful CRUD API with Node.js and Express.",
+  "main": "stub",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Charley Hutchison",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+  	"colors": "latest",
+  	"prompt": "latest",
+  	"hbs": "latest"
+  }
+}
